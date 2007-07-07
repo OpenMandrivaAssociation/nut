@@ -29,6 +29,7 @@ BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
+BuildRequires:	openssl-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
