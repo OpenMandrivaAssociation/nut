@@ -30,6 +30,8 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
+BuildRequires:	dbus-glib-devel
+BuildRequires:	dbus-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
