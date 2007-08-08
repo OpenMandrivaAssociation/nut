@@ -1,3 +1,7 @@
+%define build_hal 0
+%{?_without_hal:        %global build_hal 0}
+%{?_with_hal:           %global build_hal 1}
+
 %define	major 0
 %define libname	%mklibname upsclient %{major}
 
@@ -6,7 +10,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.0
-Release:	%mkrel 1
+Release:	%mkrel 2
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -21,7 +25,6 @@ Requires(pre):	chkconfig fileutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
 BuildRequires:	libgd-devel >= 2.0.5
-BuildRequires:	libhal-devel >= 0.5.8
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtool
@@ -30,8 +33,11 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
+%if %{build_hal}
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
+BuildRequires:	libhal-devel >= 0.5.8
+%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
@@ -130,7 +136,14 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
 %configure2_5x \
     --enable-shared \
     --sysconfdir=%{_sysconfdir}/ups \
-    --with-all \
+    --with-serial \
+    --with-usb \
+    --with-snmp \
+%if %{build_hal}
+    --with-hal \
+%endif
+    --with-cgi \
+    --with-lib \
     --with-ssl \
     --with-ipv6 \
     --with-gd-libs \
@@ -309,10 +322,12 @@ rm -rf %{buildroot}
 /sbin/everups
 /sbin/gamatronic
 /sbin/genericups
+%if %{build_hal}
 /sbin/hald-addon-bcmxcp_usb
 /sbin/hald-addon-megatec_usb
 /sbin/hald-addon-tripplite_usb
 /sbin/hald-addon-usbhid-ups
+%endif
 /sbin/isbmex
 /sbin/liebert
 /sbin/masterguard
@@ -388,6 +403,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/usbhid-ups.8*
 %{_mandir}/man8/victronups.8*
 
+%if %{build_hal}
+/sbin/hald-addon-bcmxcp_usb
+/sbin/hald-addon-megatec_usb
+/sbin/hald-addon-tripplite_usb
+/sbin/hald-addon-usbhid-ups
+%endif
 %files cgi
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/hosts.conf
