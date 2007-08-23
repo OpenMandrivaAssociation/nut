@@ -21,7 +21,7 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
-Requires(pre):	chkconfig fileutils rpm-helper >= 0.8
+Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
 BuildRequires:	libgd-devel >= 2.0.5
