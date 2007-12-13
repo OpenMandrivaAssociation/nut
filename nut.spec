@@ -10,7 +10,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.0
-Release:	%mkrel 3
+Release:	%mkrel 4
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -71,6 +71,7 @@ This package contains the shared libraries for NUT client applications.
 Summary:	Network UPS Tools server
 Group:		System/Servers
 Requires:	nut = %{epoch}:%{version}-%{release}
+Requires(pre):	nut = %{epoch}:%{version}-%{release}
 Requires(pre):	rpm-helper >= 0.8
 
 %description	server
@@ -273,6 +274,7 @@ rm -rf %{buildroot}
 %attr(0640,root,%{nutuser}) %config(noreplace) %{_sysconfdir}/ups/upssched.conf
 %attr(0640,root,%{nutuser}) %{_sysconfdir}/ups/upsmon.conf.sample
 %attr(0750,%{nutuser},%{nutuser}) %dir /var/state/ups
+%attr(0755,%{nutuser},%{nutuser}) %dir /var/run/nut
 %{_bindir}/upsc
 %{_bindir}/upscmd
 %{_bindir}/upslog
@@ -304,7 +306,6 @@ rm -rf %{buildroot}
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/udev/rules.d/70-nut-usbups.rules
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhid.usermap
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhidups
-%attr(0755,%{nutuser},%{nutuser}) %dir /var/run/nut
 /sbin/al175
 /sbin/apcsmart
 /sbin/bcmxcp
@@ -409,6 +410,7 @@ rm -rf %{buildroot}
 /sbin/hald-addon-tripplite_usb
 /sbin/hald-addon-usbhid-ups
 %endif
+
 %files cgi
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/hosts.conf
