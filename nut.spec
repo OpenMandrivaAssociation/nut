@@ -38,7 +38,6 @@ BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
 BuildRequires:	libhal-devel >= 0.5.8
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 These programs are part of a developing project to monitor the assortment of
