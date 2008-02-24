@@ -10,7 +10,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.1
-Release:	%mkrel 0
+Release:	%mkrel 1
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
