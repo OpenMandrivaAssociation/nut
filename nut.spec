@@ -10,7 +10,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.1
-Release:	%mkrel 1
+Release:	%mkrel 2
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -105,6 +105,7 @@ machine to the rest of the NUT package.
 Summary:	Development for NUT Client
 Group:		Development/C
 Requires(pre):	rpm-helper >= 0.8
+Requires:	%{libname} >= %{epoch}:%{version}
 
 %description	devel
 These programs are part of a developing project to monitor the assortment of
