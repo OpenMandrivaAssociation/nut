@@ -9,8 +9,8 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.2.0
-Release:	%mkrel 4
+Version:	2.2.1
+Release:	%mkrel 0
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -38,7 +38,7 @@ BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
 BuildRequires:	libhal-devel >= 0.5.8
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 These programs are part of a developing project to monitor the assortment of
