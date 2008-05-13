@@ -2,15 +2,15 @@
 %{?_without_hal:        %global build_hal 0}
 %{?_with_hal:           %global build_hal 1}
 
-%define	major 0
+%define	major 1
 %define libname	%mklibname upsclient %{major}
 
 %define nutuser ups
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.2.1
-Release:	%mkrel 2
+Version:	2.2.2
+Release:	%mkrel 1
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -33,6 +33,7 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
+BuildRequires:	neon-devel
 %if %{build_hal}
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
@@ -136,6 +137,7 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
 %serverbuild
 
 %configure2_5x \
+    --enable-static \
     --enable-shared \
     --sysconfdir=%{_sysconfdir}/ups \
     --with-serial \
@@ -145,8 +147,9 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
     --with-hal \
 %endif
     --with-cgi \
-    --with-lib \
+    --with-dev \
     --with-ssl \
+    --with-neonxml \
     --with-ipv6 \
     --with-gd-libs \
     --with-statepath=/var/state/ups \
@@ -356,6 +359,7 @@ rm -rf %{buildroot}
 /sbin/upsdrvctl
 /sbin/usbhid-ups
 /sbin/victronups
+/sbin/netxml-ups
 %{_datadir}/cmdvartab
 %{_datadir}/driver.list
 %{_mandir}/man5/ups.conf.5*
@@ -404,6 +408,7 @@ rm -rf %{buildroot}
 %{_mandir}/man8/upsdrvctl.8*
 %{_mandir}/man8/usbhid-ups.8*
 %{_mandir}/man8/victronups.8*
+%{_mandir}/man8/netxml-ups.8*
 
 %if %{build_hal}
 /sbin/hald-addon-bcmxcp_usb
@@ -436,11 +441,9 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root)
-%{_bindir}/libupsclient-config
 %{_includedir}/*.h
-%{_libdir}/*.la
 %{_libdir}/*.so
-%{_libdir}/*.a
+%{_libdir}/*.*a
 %{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/upscli_*.3*
 %{_mandir}/man3/upsclient.3*
