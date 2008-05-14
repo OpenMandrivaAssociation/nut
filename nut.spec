@@ -2,15 +2,23 @@
 %{?_without_hal:        %global build_hal 0}
 %{?_with_hal:           %global build_hal 1}
 
+%define build_neonxml 1
+%{?_without_neonxml:        %global build_neonxml 0}
+%{?_with_neonxml:           %global build_neonxml 1}
+
 %define	major 1
 %define libname	%mklibname upsclient %{major}
 
 %define nutuser ups
 
+%if %mdkversion <= 200700
+%define build_neonxml 0
+%endif
+
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.2
-Release:	%mkrel 1
+Release:	%mkrel 2
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -33,7 +41,9 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
+%if %{build_neonxml}
 BuildRequires:	neon-devel >= 0.25.0
+%endif
 %if %{build_hal}
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
@@ -149,7 +159,9 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
     --with-cgi \
     --with-dev \
     --with-ssl \
+%if %{build_neonxml}
     --with-neonxml \
+%endif
     --with-ipv6 \
     --with-gd-libs \
     --with-statepath=/var/state/ups \
@@ -359,7 +371,9 @@ rm -rf %{buildroot}
 /sbin/upsdrvctl
 /sbin/usbhid-ups
 /sbin/victronups
+%if %{build_neonxml}
 /sbin/netxml-ups
+%endif
 %{_datadir}/cmdvartab
 %{_datadir}/driver.list
 %{_mandir}/man5/ups.conf.5*
@@ -408,8 +422,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/upsdrvctl.8*
 %{_mandir}/man8/usbhid-ups.8*
 %{_mandir}/man8/victronups.8*
+%if %{build_neonxml}
 %{_mandir}/man8/netxml-ups.8*
-
+%endif
 %if %{build_hal}
 /sbin/hald-addon-bcmxcp_usb
 /sbin/hald-addon-megatec_usb
