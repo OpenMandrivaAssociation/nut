@@ -33,7 +33,7 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
-BuildRequires:	neon-devel
+BuildRequires:	neon-devel >= 0.25.0
 %if %{build_hal}
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
