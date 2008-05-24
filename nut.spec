@@ -29,6 +29,7 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
+Patch2:		nut-openssl_linkage_fix.diff
 Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
@@ -133,6 +134,7 @@ necessary to develop NUT client applications.
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p0
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
