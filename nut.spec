@@ -1,4 +1,4 @@
-%define build_hal 0
+%define build_hal 1
 %{?_without_hal:        %global build_hal 0}
 %{?_with_hal:           %global build_hal 1}
 
@@ -13,12 +13,13 @@
 
 %if %mdkversion <= 200700
 %define build_neonxml 0
+%define build_hal 0
 %endif
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.2
-Release:	%mkrel 4
+Release:	%mkrel 5
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -82,8 +83,8 @@ This package contains the shared libraries for NUT client applications.
 %package	server
 Summary:	Network UPS Tools server
 Group:		System/Servers
-Requires:	nut = %{epoch}:%{version}-%{release}
-Requires(pre):	nut = %{epoch}:%{version}-%{release}
+Requires:	nut >= %{epoch}:%{version}-%{release}
+Requires(pre):	nut >= %{epoch}:%{version}-%{release}
 Requires(pre):	rpm-helper >= 0.8
 
 %description	server
@@ -95,6 +96,17 @@ web pages, and more.
 
 This package is the main NUT upsd daemon and the associated per-UPS-model
 drivers which talk to the UPSes. You also need to install the base NUT package.
+
+%if %{build_hal}
+%package	drivers-hal
+Summary:	Network UPS Tools HAL drivers
+Group:		System/Servers
+Requires:	nut-server >= %{epoch}:%{version}-%{release}
+Requires(pre):	nut-server >= %{epoch}:%{version}-%{release}
+
+%description	drivers-hal
+This package contains the NUT HAL drivers.
+%endif
 
 %package	cgi
 Summary:	CGI utils for NUT
@@ -345,12 +357,6 @@ rm -rf %{buildroot}
 /sbin/everups
 /sbin/gamatronic
 /sbin/genericups
-%if %{build_hal}
-/sbin/hald-addon-bcmxcp_usb
-/sbin/hald-addon-megatec_usb
-/sbin/hald-addon-tripplite_usb
-/sbin/hald-addon-usbhid-ups
-%endif
 /sbin/isbmex
 /sbin/liebert
 /sbin/masterguard
@@ -431,11 +437,15 @@ rm -rf %{buildroot}
 %if %{build_neonxml}
 %{_mandir}/man8/netxml-ups.8*
 %endif
+
 %if %{build_hal}
-/sbin/hald-addon-bcmxcp_usb
-/sbin/hald-addon-megatec_usb
-/sbin/hald-addon-tripplite_usb
-/sbin/hald-addon-usbhid-ups
+%files drivers-hal
+%defattr(-,root,root)
+%{_libdir}/hal/hald-addon-bcmxcp_usb
+%{_libdir}/hal/hald-addon-megatec_usb
+%{_libdir}/hal/hald-addon-tripplite_usb
+%{_libdir}/hal/hald-addon-usbhid-ups
+%{_datadir}/hal/fdi/information/20thirdparty/20-ups-nut-device.fdi
 %endif
 
 %files cgi
