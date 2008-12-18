@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.2
-Release:	%mkrel 5
+Release:	%mkrel 6
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -31,6 +31,7 @@ Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
 Patch2:		nut-openssl_linkage_fix.diff
+Patch3:		nut-2.2.2-format_not_a_string_literal_and_no_format_arguments.diff
 Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
@@ -144,9 +145,10 @@ necessary to develop NUT client applications.
 %prep
 
 %setup -q
-%patch0 -p0
-%patch1 -p1
-%patch2 -p0
+%patch0 -p0 -b .upsset.conf
+%patch1 -p1 -b .mdv_conf
+%patch2 -p0 -b .openssl_linkage_fix
+%patch3 -p1 -b .format_not_a_string_literal_and_no_format_arguments
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
