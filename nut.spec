@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.2.2
-Release:	%mkrel 6
+Release:	%mkrel 7
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -259,7 +259,7 @@ EOF
 %_pre_groupadd ups %{nutuser}
 %_pre_groupadd tty %{nutuser}
 %_pre_groupadd usb %{nutuser}
-%_pre_groupadd uucp %{nutuser}
+%_pre_groupadd dialout %{nutuser}
 
 %preun
 # only do this if it is not an upgrade
