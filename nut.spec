@@ -18,8 +18,8 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.2.2
-Release:	%mkrel 7
+Version:	2.4.0
+Release:	%mkrel 1
 Epoch:		1
 License:	GPL
 Group:		System/Configuration/Hardware
@@ -30,20 +30,21 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
-Patch2:		nut-openssl_linkage_fix.diff
-Patch3:		nut-2.2.2-format_not_a_string_literal_and_no_format_arguments.diff
 Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
+BuildRequires:	genders-devel
 BuildRequires:	libgd-devel >= 2.0.5
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtool
 BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
-BuildRequires:	pkgconfig
-BuildRequires:	xpm-devel
 BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
+BuildRequires:	powerman-devel
+BuildRequires:	tcp_wrappers-devel
+BuildRequires:	xpm-devel
 %if %{build_neonxml}
 BuildRequires:	neon-devel >= 0.25.0
 %endif
@@ -87,6 +88,7 @@ Group:		System/Servers
 Requires:	nut >= %{epoch}:%{version}-%{release}
 Requires(pre):	nut >= %{epoch}:%{version}-%{release}
 Requires(pre):	rpm-helper >= 0.8
+Requires:	tcp_wrappers
 
 %description	server
 These programs are part of a developing project to monitor the assortment of
@@ -147,8 +149,6 @@ necessary to develop NUT client applications.
 %setup -q
 %patch0 -p0 -b .upsset.conf
 %patch1 -p1 -b .mdv_conf
-%patch2 -p0 -b .openssl_linkage_fix
-%patch3 -p1 -b .format_not_a_string_literal_and_no_format_arguments
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
@@ -221,7 +221,7 @@ perl -pi -e 's/# RUN_AS_USER nutmon/RUN_AS_USER %{nutuser}/g' %{buildroot}%{_sys
 cp -af data/driver.list docs/
 
 # udev usb ups stuff
-mv %{buildroot}%{_sysconfdir}/udev/rules.d/52_nut-usbups.rules %{buildroot}%{_sysconfdir}/udev/rules.d/70-nut-usbups.rules
+mv %{buildroot}%{_sysconfdir}/udev/rules.d/52-nut-usbups.rules %{buildroot}%{_sysconfdir}/udev/rules.d/70-nut-usbups.rules
 
 # fix access config files
 install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
@@ -244,6 +244,9 @@ Alias /nut /var/www/nut
 </Directory>
 
 EOF
+
+# cleanup
+rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
 
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
@@ -330,7 +333,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*.so.*
+%{_libdir}/*.so.%{major}*
 
 %files server
 %defattr(-,root,root)
@@ -342,7 +345,6 @@ rm -rf %{buildroot}
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/udev/rules.d/70-nut-usbups.rules
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhid.usermap
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhidups
-/sbin/al175
 /sbin/apcsmart
 /sbin/bcmxcp
 /sbin/bcmxcp_usb
@@ -351,10 +353,10 @@ rm -rf %{buildroot}
 /sbin/bestfcom
 /sbin/bestuferrups
 /sbin/bestups
-/sbin/cpsups
+/sbin/blazer_ser
+/sbin/blazer_usb
 /sbin/cyberpower
 /sbin/dummy-ups
-/sbin/energizerups
 /sbin/etapro
 /sbin/everups
 /sbin/gamatronic
@@ -368,12 +370,13 @@ rm -rf %{buildroot}
 /sbin/mge-shut
 /sbin/mge-utalk
 /sbin/newmge-shut
-/sbin/nitram
 /sbin/oneac
 /sbin/optiups
 /sbin/powercom
+/sbin/powerman-pdu
 /sbin/powerpanel
 /sbin/rhino
+/sbin/richcomm_usb
 /sbin/safenet
 /sbin/skel
 /sbin/snmp-ups
@@ -393,7 +396,6 @@ rm -rf %{buildroot}
 %{_mandir}/man5/ups.conf.5*
 %{_mandir}/man5/upsd.conf.5*
 %{_mandir}/man5/upsd.users.5*
-%{_mandir}/man8/al175.8*
 %{_mandir}/man8/apcsmart.8*
 %{_mandir}/man8/bcmxcp.8*
 %{_mandir}/man8/bcmxcp_usb.8*
@@ -402,10 +404,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/bestfcom.8*
 %{_mandir}/man8/bestuferrups.8*
 %{_mandir}/man8/bestups.8*
-%{_mandir}/man8/cpsups.8*
+%{_mandir}/man8/blazer.8*
 %{_mandir}/man8/cyberpower.8*
 %{_mandir}/man8/dummy-ups.8*
-%{_mandir}/man8/energizerups.8*
 %{_mandir}/man8/etapro.8*
 %{_mandir}/man8/everups.8*
 %{_mandir}/man8/gamatronic.8*
@@ -418,13 +419,14 @@ rm -rf %{buildroot}
 %{_mandir}/man8/metasys.8*
 %{_mandir}/man8/mge-shut.8*
 %{_mandir}/man8/mge-utalk.8*
-%{_mandir}/man8/nitram.8*
 %{_mandir}/man8/nutupsdrv.8*
 %{_mandir}/man8/oneac.8*
 %{_mandir}/man8/optiups.8*
 %{_mandir}/man8/powercom.8*
+%{_mandir}/man8/powerman-pdu.8*
 %{_mandir}/man8/powerpanel.8*
 %{_mandir}/man8/rhino.8*
+%{_mandir}/man8/richcomm_usb.8*
 %{_mandir}/man8/safenet.8*
 %{_mandir}/man8/snmp-ups.8*
 %{_mandir}/man8/solis.8*
