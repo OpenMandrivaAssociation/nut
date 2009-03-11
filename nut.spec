@@ -18,10 +18,10 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.4.0
+Version:	2.4.1
 Release:	%mkrel 1
 Epoch:		1
-License:	GPL
+License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://random.networkupstools.org
 Source0:	http://random.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz
@@ -369,6 +369,7 @@ rm -rf %{buildroot}
 /sbin/metasys
 /sbin/mge-shut
 /sbin/mge-utalk
+/sbin/microdowell
 /sbin/newmge-shut
 /sbin/oneac
 /sbin/optiups
@@ -419,6 +420,7 @@ rm -rf %{buildroot}
 %{_mandir}/man8/metasys.8*
 %{_mandir}/man8/mge-shut.8*
 %{_mandir}/man8/mge-utalk.8*
+%{_mandir}/man8/microdowell.8*
 %{_mandir}/man8/nutupsdrv.8*
 %{_mandir}/man8/oneac.8*
 %{_mandir}/man8/optiups.8*
