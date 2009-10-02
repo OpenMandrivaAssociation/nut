@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.4.1
-Release:	%mkrel 3
+Release:	%mkrel 4
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -257,12 +257,9 @@ rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
 %endif
 
 %pre
-# Create an UPS user.
+# Create an UPS user
 %_pre_useradd %{nutuser} /var/state/ups /bin/false
-%_pre_groupadd ups %{nutuser}
-%_pre_groupadd tty %{nutuser}
-%_pre_groupadd usb %{nutuser}
-%_pre_groupadd dialout %{nutuser}
+%{_sbindir}/usermod -G dialout,tty,usb %{nutuser}
 
 %preun
 # only do this if it is not an upgrade
@@ -280,9 +277,7 @@ fi
 %pre	server
 # Create an UPS user. We do not use the buggy macro %_pre_groupadd anymore.
 %_pre_useradd %{nutuser} /var/state/ups /bin/false
-%_pre_groupadd ups %{nutuser}
-%_pre_groupadd tty %{nutuser}
-%_pre_groupadd usb %{nutuser}
+%{_sbindir}/usermod -G dialout,tty,usb %{nutuser}
 
 %preun	server
 %_preun_service upsd || :
