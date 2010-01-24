@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.4.1
-Release:	%mkrel 5
+Release:	%mkrel 6
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -30,6 +30,8 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
+# (bor) replace obsolete udev keywords (mdv #57227)
+Patch2:		nut-2.4.1-udev150-keywords.patch
 Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
@@ -149,6 +151,7 @@ necessary to develop NUT client applications.
 %setup -q
 %patch0 -p0 -b .upsset.conf
 %patch1 -p1 -b .mdv_conf
+%patch2 -p1 -b .udev150
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
