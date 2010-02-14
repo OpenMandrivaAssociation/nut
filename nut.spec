@@ -23,9 +23,9 @@ Release:	%mkrel 6
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
-URL:		http://random.networkupstools.org
-Source0:	http://random.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz
-Source1:	http://random.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz.sig
+URL:		http://www.networkupstools.org/
+Source0:	http://www.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz
+Source1:	http://www.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz.sig
 Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
