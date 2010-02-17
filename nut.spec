@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.4.1
-Release:	%mkrel 6
+Release:	%mkrel 7
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -32,7 +32,10 @@ Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
 # (bor) replace obsolete udev keywords (mdv #57227)
 Patch2:		nut-2.4.1-udev150-keywords.patch
-Requires(pre):	chkconfig coreutils rpm-helper >= 0.8
+Requires(pre):	rpm-helper
+Requires(post):	rpm-helper
+Requires(postun):	rpm-helper
+Requires(preun):	rpm-helper
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
 BuildRequires:	genders-devel
@@ -117,7 +120,10 @@ This package contains the NUT HAL drivers.
 Summary:	CGI utils for NUT
 Group:		Monitoring
 Requires:	apache
-Requires(pre):	rpm-helper >= 0.8
+%if %mdkversion < 201010
+Requires(post):   rpm-helper
+Requires(postun):   rpm-helper
+%endif
 Conflicts:	apcupsd
 
 %description	cgi
@@ -295,10 +301,14 @@ if [ ! -f %_sbindir/upsmon ]; then
 fi
 
 %post cgi
+%if %mdkversion < 201010
 %_post_webapp
+%endif
 
 %postun cgi
+%if %mdkversion < 201010
 %_postun_webapp
+%endif
 
 %clean
 rm -rf %{buildroot}
