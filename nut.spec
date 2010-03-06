@@ -18,8 +18,8 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.4.1
-Release:	%mkrel 8
+Version:	2.4.3
+Release:	%mkrel 1
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -30,8 +30,7 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
-# (bor) replace obsolete udev keywords (mdv #57227)
-Patch2:		nut-2.4.1-udev150-keywords.patch
+Patch2:		nut-2.4.3-m4_macros_revert_fix.diff
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(postun):	rpm-helper
@@ -157,7 +156,7 @@ necessary to develop NUT client applications.
 %setup -q
 %patch0 -p0 -b .upsset.conf
 %patch1 -p1 -b .mdv_conf
-%patch2 -p1 -b .udev150
+%patch2 -p1
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
@@ -185,7 +184,7 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
     --with-dev \
     --with-ssl \
 %if %{build_neonxml}
-    --with-neonxml \
+    --with-neon \
 %endif
     --with-ipv6 \
     --with-gd-libs \
@@ -359,18 +358,22 @@ rm -rf %{buildroot}
 /sbin/belkin
 /sbin/belkinunv
 /sbin/bestfcom
+/sbin/bestfortress
 /sbin/bestuferrups
 /sbin/bestups
 /sbin/blazer_ser
 /sbin/blazer_usb
-/sbin/cyberpower
+/sbin/clone
+/sbin/clone-outlet
 /sbin/dummy-ups
 /sbin/etapro
 /sbin/everups
 /sbin/gamatronic
 /sbin/genericups
 /sbin/isbmex
+/sbin/ivtscd
 /sbin/liebert
+/sbin/liebertgxt2
 /sbin/masterguard
 /sbin/megatec
 /sbin/megatec_usb
@@ -402,6 +405,7 @@ rm -rf %{buildroot}
 %endif
 %{_datadir}/cmdvartab
 %{_datadir}/driver.list
+%{_mandir}/man5/nut.conf.5*
 %{_mandir}/man5/ups.conf.5*
 %{_mandir}/man5/upsd.conf.5*
 %{_mandir}/man5/upsd.users.5*
@@ -411,17 +415,20 @@ rm -rf %{buildroot}
 %{_mandir}/man8/belkin.8*
 %{_mandir}/man8/belkinunv.8*
 %{_mandir}/man8/bestfcom.8*
+%{_mandir}/man8/bestfortress.8*
 %{_mandir}/man8/bestuferrups.8*
 %{_mandir}/man8/bestups.8*
 %{_mandir}/man8/blazer.8*
-%{_mandir}/man8/cyberpower.8*
+%{_mandir}/man8/clone.8*
 %{_mandir}/man8/dummy-ups.8*
 %{_mandir}/man8/etapro.8*
 %{_mandir}/man8/everups.8*
 %{_mandir}/man8/gamatronic.8*
 %{_mandir}/man8/genericups.8*
 %{_mandir}/man8/isbmex.8*
+%{_mandir}/man8/ivtscd.8*
 %{_mandir}/man8/liebert.8*
+%{_mandir}/man8/liebertgxt2.8*
 %{_mandir}/man8/masterguard.8*
 %{_mandir}/man8/megatec.8*
 %{_mandir}/man8/megatec_usb.8*
