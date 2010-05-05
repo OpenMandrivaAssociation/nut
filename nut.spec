@@ -19,7 +19,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.4.3
-Release:	%mkrel 2
+Release:	%mkrel 3
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -31,6 +31,8 @@ Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
 Patch2:		nut-2.4.3-m4_macros_revert_fix.diff
+#from upstream SVN
+Patch3:		nut-2.4.3-udev-rules-svn-r2411.diff
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(postun):	rpm-helper
@@ -157,6 +159,7 @@ necessary to develop NUT client applications.
 %patch0 -p0 -b .upsset.conf
 %patch1 -p1 -b .mdv_conf
 %patch2 -p1
+%patch3 -p1 -b .udev
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
