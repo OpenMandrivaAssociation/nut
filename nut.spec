@@ -1,10 +1,14 @@
 %define build_hal 1
-%{?_without_hal:        %global build_hal 0}
-%{?_with_hal:           %global build_hal 1}
+%{?_without_hal: %global build_hal 0}
+%{?_with_hal: %global build_hal 1}
 
 %define build_neonxml 1
-%{?_without_neonxml:        %global build_neonxml 0}
-%{?_with_neonxml:           %global build_neonxml 1}
+%{?_without_neonxml: %global build_neonxml 0}
+%{?_with_neonxml: %global build_neonxml 1}
+
+%define build_doc 0
+%{?_without_doc: %global build_doc 0}
+%{?_with_doc: %global build_doc 1}
 
 %define	major 1
 %define libname	%mklibname upsclient %{major}
@@ -18,8 +22,8 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.4.3
-Release:	%mkrel 3
+Version:	2.6.0
+Release:	%mkrel 1
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -30,9 +34,6 @@ Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
-Patch2:		nut-2.4.3-m4_macros_revert_fix.diff
-#from upstream SVN
-Patch3:		nut-2.4.3-udev-rules-svn-r2411.diff
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(postun):	rpm-helper
@@ -58,6 +59,10 @@ BuildRequires:	neon-devel >= 0.25.0
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
 BuildRequires:	libhal-devel >= 0.5.8
+%endif
+%if %{build_doc}
+BuildRequires:	dblatex
+BuildRequires:	asciidoc >= 8.6.3
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -158,8 +163,6 @@ necessary to develop NUT client applications.
 %setup -q
 %patch0 -p0 -b .upsset.conf
 %patch1 -p1 -b .mdv_conf
-%patch2 -p1
-%patch3 -p1 -b .udev
 
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
@@ -169,7 +172,7 @@ cp %{SOURCE3} upsmon.init
 
 %build
 # this takes care of rpath
-libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-missing --copy
+#libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-missing --copy
 
 %serverbuild
 
@@ -189,8 +192,9 @@ libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-mis
 %if %{build_neonxml}
     --with-neon \
 %endif
-    --with-ipv6 \
-    --with-gd-libs \
+%if %{build_doc}
+    --with-doc \
+%endif
     --with-statepath=/var/state/ups \
     --with-drvpath=/sbin \
     --with-cgipath=/var/www/cgi-bin \
@@ -376,10 +380,8 @@ rm -rf %{buildroot}
 /sbin/isbmex
 /sbin/ivtscd
 /sbin/liebert
-/sbin/liebertgxt2
+/sbin/liebert-esp2
 /sbin/masterguard
-/sbin/megatec
-/sbin/megatec_usb
 /sbin/metasys
 /sbin/mge-shut
 /sbin/mge-utalk
@@ -431,10 +433,8 @@ rm -rf %{buildroot}
 %{_mandir}/man8/isbmex.8*
 %{_mandir}/man8/ivtscd.8*
 %{_mandir}/man8/liebert.8*
-%{_mandir}/man8/liebertgxt2.8*
+%{_mandir}/man8/liebert-esp2.8*
 %{_mandir}/man8/masterguard.8*
-%{_mandir}/man8/megatec.8*
-%{_mandir}/man8/megatec_usb.8*
 %{_mandir}/man8/metasys.8*
 %{_mandir}/man8/mge-shut.8*
 %{_mandir}/man8/mge-utalk.8*
@@ -466,7 +466,7 @@ rm -rf %{buildroot}
 %files drivers-hal
 %defattr(-,root,root)
 %{_libdir}/hal/hald-addon-bcmxcp_usb
-%{_libdir}/hal/hald-addon-megatec_usb
+%{_libdir}/hal/hald-addon-blazer_usb
 %{_libdir}/hal/hald-addon-tripplite_usb
 %{_libdir}/hal/hald-addon-usbhid-ups
 %{_datadir}/hal/fdi/information/20thirdparty/20-ups-nut-device.fdi
