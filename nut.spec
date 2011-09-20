@@ -268,6 +268,7 @@ install -m0644 tools/nut-scanner/*.h %{buildroot}%{_includedir}/
 
 # cleanup
 rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
+rm -f %{buildroot}%{_libdir}/*.*a
 
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
@@ -513,7 +514,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_includedir}/*.h
 %{_libdir}/*.so
-%{_libdir}/*.*a
 %{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/upscli_*.3*
 %{_mandir}/man3/upsclient.3*
