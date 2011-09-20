@@ -64,6 +64,9 @@ BuildRequires:	libhal-devel >= 0.5.8
 BuildRequires:	dblatex
 BuildRequires:	asciidoc >= 8.6.3
 %endif
+%if %mdkversion >= 201100
+BuildRequires:	systemd
+%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -348,7 +351,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/upsmon.8*
 %{_mandir}/man8/upsrw.8*
 %{_mandir}/man8/upssched.8*
-%{_mandir}/man8/upsset.cgi.8*
+%if %mdkversion >= 201100
+/lib/systemd/system-shutdown/nutshutdown
+/lib/systemd/system/nut-driver.service
+/lib/systemd/system/nut-monitor.service
+/lib/systemd/system/nut-server.service
+%endif
 
 %files -n %{libname}
 %defattr(-,root,root)
