@@ -22,22 +22,22 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.6.1
-Release:	%mkrel 2
+Version:	2.6.2
+Release:	%mkrel 1
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
 URL:		http://www.networkupstools.org/
-Source0:	http://www.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz
-Source1:	http://www.networkupstools.org/source/2.0/%{name}-%{version}.tar.gz.sig
+Source0:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz
+Source1:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz.sig
 Source2:	upsd.init
 Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
-Requires(postun):	rpm-helper
-Requires(preun):	rpm-helper
+Requires(postun): rpm-helper
+Requires(preun): rpm-helper
 BuildRequires:	autoconf2.5
 BuildRequires:	freetype2-devel
 BuildRequires:	genders-devel
@@ -260,6 +260,9 @@ Alias /nut /var/www/nut
 
 EOF
 
+# install missing (forgotten?) headers
+install -m0644 tools/nut-scanner/*.h %{buildroot}%{_includedir}/
+
 # cleanup
 rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
 
@@ -328,6 +331,7 @@ rm -rf %{buildroot}
 %attr(0640,root,%{nutuser}) %{_sysconfdir}/ups/upsmon.conf.sample
 %attr(0750,%{nutuser},%{nutuser}) %dir /var/state/ups
 %attr(0755,%{nutuser},%{nutuser}) %dir /var/run/nut
+%{_bindir}/nut-scanner
 %{_bindir}/upsc
 %{_bindir}/upscmd
 %{_bindir}/upslog
@@ -337,11 +341,12 @@ rm -rf %{buildroot}
 %{_sbindir}/upssched
 %{_mandir}/man5/upsmon.conf.5*
 %{_mandir}/man5/upssched.conf.5*
+%{_mandir}/man8/nut-scanner.8*
 %{_mandir}/man8/upsc.8*
 %{_mandir}/man8/upscmd.8*
-%{_mandir}/man8/upsrw.8*
 %{_mandir}/man8/upslog.8*
 %{_mandir}/man8/upsmon.8*
+%{_mandir}/man8/upsrw.8*
 %{_mandir}/man8/upssched.8*
 %{_mandir}/man8/upsset.cgi.8*
 
@@ -360,6 +365,7 @@ rm -rf %{buildroot}
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhid.usermap
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhidups
 /sbin/apcsmart
+/sbin/apcsmart-old
 /sbin/bcmxcp
 /sbin/bcmxcp_usb
 /sbin/belkin
@@ -415,6 +421,7 @@ rm -rf %{buildroot}
 %{_mandir}/man5/upsd.conf.5*
 %{_mandir}/man5/upsd.users.5*
 %{_mandir}/man8/apcsmart.8*
+%{_mandir}/man8/apcsmart-old.8*
 %{_mandir}/man8/bcmxcp.8*
 %{_mandir}/man8/bcmxcp_usb.8*
 %{_mandir}/man8/belkin.8*
@@ -502,3 +509,16 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/upscli_*.3*
 %{_mandir}/man3/upsclient.3*
+%{_mandir}/man3/nutscan_add_device_to_device.3*
+%{_mandir}/man3/nutscan_add_option_to_device.3*
+%{_mandir}/man3/nutscan_cidr_to_ip.3*
+%{_mandir}/man3/nutscan_display_parsable.3*
+%{_mandir}/man3/nutscan_display_ups_conf.3*
+%{_mandir}/man3/nutscan_free_device.3*
+%{_mandir}/man3/nutscan_new_device.3*
+%{_mandir}/man3/nutscan_scan_avahi.3*
+%{_mandir}/man3/nutscan_scan_ipmi.3*
+%{_mandir}/man3/nutscan_scan_nut.3*
+%{_mandir}/man3/nutscan_scan_snmp.3*
+%{_mandir}/man3/nutscan_scan_usb.3*
+%{_mandir}/man3/nutscan_scan_xml_http.3*
