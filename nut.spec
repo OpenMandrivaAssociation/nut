@@ -22,7 +22,7 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.6.2
+Version:	2.6.3
 Release:	%mkrel 1
 Epoch:		1
 License:	GPLv2
@@ -52,6 +52,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	powerman-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
+BuildRequires:  lib64ltdl-devel
 %if %{build_neonxml}
 BuildRequires:	neon-devel >= 0.25.0
 %endif
@@ -65,7 +66,7 @@ BuildRequires:	dblatex
 BuildRequires:	asciidoc >= 8.6.3
 %endif
 %if %mdkversion >= 201100
-BuildRequires:	systemd
+BuildRequires:	libsystemd-daemon-devel
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -530,3 +531,5 @@ rm -rf %{buildroot}
 %{_mandir}/man3/nutscan_scan_snmp.3*
 %{_mandir}/man3/nutscan_scan_usb.3*
 %{_mandir}/man3/nutscan_scan_xml_http.3*
+%{_mandir}/man3/nutscan.3*
+%{_mandir}/man3/nutscan_init.3*
