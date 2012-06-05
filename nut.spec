@@ -2,10 +2,6 @@
 %{?_without_hal: %global build_hal 0}
 %{?_with_hal: %global build_hal 1}
 
-%define build_neonxml 1
-%{?_without_neonxml: %global build_neonxml 0}
-%{?_with_neonxml: %global build_neonxml 1}
-
 %define build_doc 0
 %{?_without_doc: %global build_doc 0}
 %{?_with_doc: %global build_doc 1}
@@ -14,11 +10,6 @@
 %define libname	%mklibname upsclient %{major}
 
 %define nutuser ups
-
-%if %mdkversion <= 200700
-%define build_neonxml 0
-%define build_hal 0
-%endif
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
@@ -30,21 +21,18 @@ Group:		System/Configuration/Hardware
 URL:		http://www.networkupstools.org/
 Source0:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz
 Source1:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz.sig
-Source2:	upsd.init
-Source3:	upsmon.init
 Patch0:		nut-upsset.conf.diff
 Patch1:		nut-mdv_conf.diff
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(postun): rpm-helper
 Requires(preun): rpm-helper
-BuildRequires:	autoconf2.5
+BuildRequires:	autoconf automake libtool
 BuildRequires:	freetype2-devel
 BuildRequires:	genders-devel
 BuildRequires:	libgd-devel >= 2.0.5
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
-BuildRequires:	libtool
 BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
@@ -53,9 +41,7 @@ BuildRequires:	powerman-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
 BuildRequires:  libtool-devel
-%if %{build_neonxml}
 BuildRequires:	neon-devel >= 0.25.0
-%endif
 %if %{build_hal}
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
@@ -65,9 +51,8 @@ BuildRequires:	libhal-devel >= 0.5.8
 BuildRequires:	dblatex
 BuildRequires:	asciidoc >= 8.6.3
 %endif
-%if %mdkversion >= 201100
 BuildRequires:	libsystemd-daemon-devel
-%endif
+BuildRequires:	systemd-units
 
 %description
 These programs are part of a developing project to monitor the assortment of
@@ -129,10 +114,6 @@ This package contains the NUT HAL drivers.
 Summary:	CGI utils for NUT
 Group:		Monitoring
 Requires:	apache
-%if %mdkversion < 201010
-Requires(post):   rpm-helper
-Requires(postun):   rpm-helper
-%endif
 Conflicts:	apcupsd
 
 %description	cgi
@@ -170,9 +151,6 @@ necessary to develop NUT client applications.
 # instead of a patch
 perl -pi -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
 
-cp %{SOURCE2} upsd.init
-cp %{SOURCE3} upsmon.init
-
 %build
 # this takes care of rpath
 #libtoolize --copy --force; aclocal -I m4; autoconf; automake --foreign --add-missing --copy
@@ -192,9 +170,7 @@ cp %{SOURCE3} upsmon.init
     --with-cgi \
     --with-dev \
     --with-ssl \
-%if %{build_neonxml}
     --with-neon \
-%endif
 %if %{build_doc}
     --with-doc \
 %endif
@@ -218,11 +194,6 @@ cp %{SOURCE3} upsmon.init
 
 install -d %{buildroot}/var/state/ups
 install -d %{buildroot}/var/run/nut
-
-# install SYSV init stuff
-install -d %{buildroot}%{_initrddir}
-install -m0755 upsd.init %{buildroot}%{_initrddir}/upsd
-install -m0755 upsmon.init %{buildroot}%{_initrddir}/upsmon
 
 # move the *.sample config files to their real locations
 # we don't need to worry about overwriting anything since
@@ -268,6 +239,7 @@ install -m0644 tools/nut-scanner/*.h %{buildroot}%{_includedir}/
 # cleanup
 rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
 rm -f %{buildroot}%{_libdir}/*.*a
+rm -f %{buildroot}%{_mandir}/man8/nut-recorder.8*
 
 %pre
 # Create an UPS user
@@ -316,8 +288,10 @@ fi
 
 %files
 %doc AUTHORS COPYING ChangeLog MAINTAINERS NEWS README UPGRADING docs
+/lib/systemd/system-shutdown/nutshutdown
+/lib/systemd/system/nut-driver.service
+/lib/systemd/system/nut-monitor.service
 %attr(0755,root,root) %dir %{_sysconfdir}/ups
-%attr(0744,root,root) %{_initrddir}/upsmon
 %attr(0640,root,%{nutuser}) %config(noreplace) %{_sysconfdir}/ups/upssched.conf
 %attr(0640,root,%{nutuser}) %{_sysconfdir}/ups/upsmon.conf.sample
 %attr(0750,%{nutuser},%{nutuser}) %dir /var/state/ups
@@ -339,19 +313,13 @@ fi
 %{_mandir}/man8/upsmon.8*
 %{_mandir}/man8/upsrw.8*
 %{_mandir}/man8/upssched.8*
-%if %mdkversion >= 201100
-/lib/systemd/system-shutdown/nutshutdown
-/lib/systemd/system/nut-driver.service
-/lib/systemd/system/nut-monitor.service
-/lib/systemd/system/nut-server.service
-%endif
 
 %files -n %{libname}
 %{_libdir}/*.so.%{major}*
 
 %files server
+/lib/systemd/system/nut-server.service
 %{_sbindir}/upsd
-%attr(0744,root,root) %{_initrddir}/upsd
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/ups.conf
 %attr(0640,root,%{nutuser}) %config(noreplace) %{_sysconfdir}/ups/upsd.users
 %attr(0640,root,%{nutuser}) %config(noreplace) %{_sysconfdir}/ups/upsd.conf
@@ -405,9 +373,7 @@ fi
 /sbin/upsdrvctl
 /sbin/usbhid-ups
 /sbin/victronups
-%if %{build_neonxml}
 /sbin/netxml-ups
-%endif
 %{_datadir}/cmdvartab
 %{_datadir}/driver.list
 %{_mandir}/man5/nut.conf.5*
@@ -459,9 +425,7 @@ fi
 %{_mandir}/man8/upsdrvctl.8*
 %{_mandir}/man8/usbhid-ups.8*
 %{_mandir}/man8/victronups.8*
-%if %{build_neonxml}
 %{_mandir}/man8/netxml-ups.8*
-%endif
 
 %if %{build_hal}
 %files drivers-hal
