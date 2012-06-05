@@ -22,8 +22,8 @@
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
-Version:	2.6.3
-Release:	%mkrel 2
+Version:	2.6.4
+Release:	1
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -68,7 +68,6 @@ BuildRequires:	asciidoc >= 8.6.3
 %if %mdkversion >= 201100
 BuildRequires:	libsystemd-daemon-devel
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 These programs are part of a developing project to monitor the assortment of
@@ -214,7 +213,6 @@ cp %{SOURCE3} upsmon.init
 %make
 
 %install
-rm -rf %{buildroot}
 
 %makeinstall_std
 
@@ -271,14 +269,6 @@ install -m0644 tools/nut-scanner/*.h %{buildroot}%{_includedir}/
 rm -f %{buildroot}%{_sysconfdir}/ups/nut.conf
 rm -f %{buildroot}%{_libdir}/*.*a
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 %pre
 # Create an UPS user
 %_pre_useradd %{nutuser} /var/state/ups /bin/false
@@ -324,11 +314,7 @@ fi
 %_postun_webapp
 %endif
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog MAINTAINERS NEWS README UPGRADING docs
 %attr(0755,root,root) %dir %{_sysconfdir}/ups
 %attr(0744,root,root) %{_initrddir}/upsmon
@@ -361,11 +347,9 @@ rm -rf %{buildroot}
 %endif
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/*.so.%{major}*
 
 %files server
-%defattr(-,root,root)
 %{_sbindir}/upsd
 %attr(0744,root,root) %{_initrddir}/upsd
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/ups.conf
@@ -481,7 +465,6 @@ rm -rf %{buildroot}
 
 %if %{build_hal}
 %files drivers-hal
-%defattr(-,root,root)
 %{_libdir}/hal/hald-addon-bcmxcp_usb
 %{_libdir}/hal/hald-addon-blazer_usb
 %{_libdir}/hal/hald-addon-tripplite_usb
@@ -490,7 +473,6 @@ rm -rf %{buildroot}
 %endif
 
 %files cgi
-%defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/hosts.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/upsset.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/upsstats.html
@@ -512,7 +494,6 @@ rm -rf %{buildroot}
 %{_mandir}/man8/upsstats.cgi.8*
 
 %files devel
-%defattr(-,root,root)
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
