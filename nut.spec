@@ -52,7 +52,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	powerman-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
-BuildRequires:  libltdl-devel
+BuildRequires:  libtool-devel
 %if %{build_neonxml}
 BuildRequires:	neon-devel >= 0.25.0
 %endif
