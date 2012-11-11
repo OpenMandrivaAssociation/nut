@@ -1,0 +1,58 @@
+diff -Naur nut-2.4.3/conf/upsmon.conf.sample nut-2.4.3.oden/conf/upsmon.conf.sample
+--- nut-2.4.3/conf/upsmon.conf.sample	2010-02-18 22:19:09.000000000 +0100
++++ nut-2.4.3.oden/conf/upsmon.conf.sample	2010-03-06 20:05:53.036474911 +0100
+@@ -127,6 +127,7 @@
+ #
+ # Example:
+ # NOTIFYCMD /usr/local/ups/bin/notifyme
++#NOTIFYCMD /usr/sbin/upssched
+ 
+ # --------------------------------------------------------------------------
+ # POLLFREQ <n> 
+@@ -259,6 +260,12 @@
+ #
+ # If you use IGNORE, don't use any other flags on the same line.
+ 
++#NOTIFYFLAG ONLINE SYSLOG+EXEC
++#NOTIFYFLAG ONBATT EXEC+SYSLOG
++#NOTIFYFLAG LOWBATT SYSLOG+EXEC
++#NOTIFYFLAG FSD SYSLOG+EXEC
++#NOTIFYFLAG SHUTDOWN SYSLOG+EXEC
++
+ # --------------------------------------------------------------------------
+ # RBWARNTIME - replace battery warning time in seconds
+ #
+diff -Naur nut-2.4.3/conf/upssched.conf.sample.in nut-2.4.3.oden/conf/upssched.conf.sample.in
+--- nut-2.4.3/conf/upssched.conf.sample.in	2010-02-11 22:43:06.000000000 +0100
++++ nut-2.4.3.oden/conf/upssched.conf.sample.in	2010-03-06 20:06:53.286506503 +0100
+@@ -15,6 +15,7 @@
+ # An example has been provided to help you get started.
+ 
+ CMDSCRIPT @BINDIR@/upssched-cmd
++#CMDSCRIPT "/usr/sbin/upsmon -c fsd"
+ 
+ # ============================================================================
+ #
+@@ -42,6 +43,7 @@
+ # about how your system works before potentially opening a hole.
+ #
+ # PIPEFN @STATEPATH@/upssched/upssched.pipe
++#PIPEFN /var/state/ups/upssched.pipe
+ 
+ # ============================================================================
+ #
+@@ -57,6 +59,7 @@
+ # You should put this in the same directory as PIPEFN.
+ #
+ # LOCKFN @STATEPATH@/upssched/upssched.lock
++#LOCKFN /var/state/ups/upssched.lock
+ 
+ # ============================================================================
+ #
+@@ -111,3 +114,6 @@
+ #   'ups-back-on-line' via CMDSCRIPT.
+ #
+ #   AT ONLINE * EXECUTE ups-back-on-line
++
++#AT ONBATT * START-TIMER earlyshutdown 30
++#AT ONLINE * CANCEL-TIMER earlyshutdown

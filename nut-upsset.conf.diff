@@ -1,0 +1,10 @@
+--- conf/upsset.conf.sample	2006-11-08 03:47:35.000000000 +0100
++++ conf/upsset.conf.sample.oden	2007-07-07 13:10:06.000000000 +0200
+@@ -31,6 +31,4 @@
+ # the line below and start using upsset.cgi through your web browser.
+ #
+ 
+-###
+-### I_HAVE_SECURED_MY_CGI_DIRECTORY
+-###
++I_HAVE_SECURED_MY_CGI_DIRECTORY
