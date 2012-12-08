@@ -1,4 +1,4 @@
-%define build_hal 1
+%define build_hal 0
 %{?_without_hal: %global build_hal 0}
 %{?_with_hal: %global build_hal 1}
 
@@ -14,7 +14,7 @@
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Version:	2.6.4
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPLv2
 Group:		System/Configuration/Hardware
@@ -28,15 +28,14 @@ Requires(post):	rpm-helper
 Requires(postun): rpm-helper
 Requires(preun): rpm-helper
 BuildRequires:	autoconf automake libtool
-BuildRequires:	freetype2-devel
+BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	genders-devel
 BuildRequires:	libgd-devel >= 2.0.5
 BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
+BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
-BuildRequires:	openssl-devel
-BuildRequires:	pkgconfig
+BuildRequires:	pkgconfig(openssl)
 BuildRequires:	powerman-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
@@ -46,6 +45,8 @@ BuildRequires:	neon-devel >= 0.25.0
 BuildRequires:	dbus-glib-devel
 BuildRequires:	dbus-devel
 BuildRequires:	libhal-devel >= 0.5.8
+%else
+Obsoletes:		%{name}-drivers-hal < %{EVRD}
 %endif
 %if %{build_doc}
 BuildRequires:	dblatex
@@ -478,3 +479,241 @@ fi
 %{_mandir}/man3/nutscan_scan_xml_http.3*
 %{_mandir}/man3/nutscan.3*
 %{_mandir}/man3/nutscan_init.3*
+
+
+%changelog
+* Tue Jun 05 2012 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.4-1
++ Revision: 802595
+- drop sysv scripts
+- various fixes
+- fix deps
+- 2.6.4
+
+* Tue Jan 24 2012 Glen Ogilvie <nelg@mandriva.org> 1:2.6.3-2
++ Revision: 767799
+- minor fix.. type in BuildRequires
+- Release: 2.6.3
+
+* Tue Sep 20 2011 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.2-1
++ Revision: 700494
+- cleanup devel files
+- added systemd stuff
+- 2.6.2
+
+* Mon Jul 18 2011 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.1-2
++ Revision: 690298
+- rebuilt against new net-snmp libs
+
+* Mon Jun 06 2011 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.1-1
++ Revision: 682912
+- 2.6.1
+
+* Wed May 04 2011 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.0-2
++ Revision: 666635
+- mass rebuild
+
+* Wed Jan 26 2011 Oden Eriksson <oeriksson@mandriva.com> 1:2.6.0-1
++ Revision: 632998
+- 2.6.0
+
+* Wed May 05 2010 Christophe Fergeau <cfergeau@mandriva.com> 1:2.4.3-3mdv2011.0
++ Revision: 542500
+- patch3: upstream patch to fix deprecated syntax in udev rule
+
+* Fri Apr 09 2010 Ahmad Samir <ahmadsamir@mandriva.org> 1:2.4.3-2mdv2010.1
++ Revision: 533279
+- rebuild for openssl-1.0.0
+
+* Sat Mar 06 2010 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.3-1mdv2010.1
++ Revision: 515275
+- 2.4.3
+- drop upstream added patches
+- rediff one patch
+- patch some borked m4 (from 2.4.1)
+
+* Fri Feb 26 2010 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.1-8mdv2010.1
++ Revision: 511599
+- rebuilt against openssl-0.9.8m
+
+* Wed Feb 17 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1:2.4.1-7mdv2010.1
++ Revision: 507251
+- rely on filetrigger for reloading apache configuration begining with 2010.1, rpm-helper macros otherwise
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - fix url
+
+* Sun Jan 24 2010 Andrey Borzenkov <arvidjaar@mandriva.org> 1:2.4.1-6mdv2010.1
++ Revision: 495436
+- patch2: replace obsolete udev keywords (mdv #57227)
+
+* Thu Oct 15 2009 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.1-5mdv2010.0
++ Revision: 457614
+- rebuilt against new net-snmp libs
+
+* Fri Oct 02 2009 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.1-4mdv2010.0
++ Revision: 452738
+- fix #53021 (wrong tty group at shutdown)
+
+* Thu Sep 03 2009 Christophe Fergeau <cfergeau@mandriva.com> 1:2.4.1-3mdv2010.0
++ Revision: 426261
+- rebuild
+
+* Wed Mar 11 2009 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.1-2mdv2009.1
++ Revision: 353754
+- bump release due to unknown build system problems
+- 2.4.1
+
+* Thu Jan 29 2009 Oden Eriksson <oeriksson@mandriva.com> 1:2.4.0-1mdv2009.1
++ Revision: 335059
+- 2.4.0
+- drop obsolete patches
+- fix deps
+
+* Fri Jan 09 2009 Frederic Crozat <fcrozat@mandriva.com> 1:2.2.2-7mdv2009.1
++ Revision: 327599
+- use dialout group instead of uucp group
+
+* Thu Dec 18 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.2-6mdv2009.1
++ Revision: 315543
+- added P3 to fix build with -Werror=format-security (thanks fcrozat)
+
+* Fri Sep 12 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.2-5mdv2009.0
++ Revision: 284161
+- add hal support with a twist (nut-drivers-hal)
+
+* Thu Aug 07 2008 Thierry Vignaud <tv@mandriva.org> 1:2.2.2-4mdv2009.0
++ Revision: 265200
+- rebuild early 2009.0 package (before pixel changes)
+
+  + Pixel <pixel@mandriva.com>
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+
+* Sat May 24 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.2-3mdv2009.0
++ Revision: 210918
+- fix build
+- rebuild
+
+* Wed May 14 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.2-2mdv2009.0
++ Revision: 207144
+- make it backportable to CS4
+- fix deps
+
+* Tue May 13 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.2-1mdv2009.0
++ Revision: 206570
+- 2.2.2
+
+* Sun Feb 24 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.1-2mdv2008.1
++ Revision: 174415
+- fix deps
+
+* Sun Feb 24 2008 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.1-1mdv2008.1
++ Revision: 174310
+- added lsb tags into the init scripts
+- 2.2.1
+- rediffed P1
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Thu Dec 13 2007 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.0-4mdv2008.1
++ Revision: 119519
+- fix #36125 (Nut's UPSmon init script PID lock directory)
+
+* Thu Aug 23 2007 Thierry Vignaud <tv@mandriva.org> 1:2.2.0-3mdv2008.0
++ Revision: 70384
+- fileutils, sh-utils & textutils have been obsoleted by coreutils a long time ago
+
+* Wed Aug 08 2007 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.0-2mdv2008.0
++ Revision: 60175
+- disable hal support for now, it's too experimental and
+  conflicts with other drivers
+
+* Sat Jul 07 2007 Oden Eriksson <oeriksson@mandriva.com> 1:2.2.0-1mdv2008.0
++ Revision: 49428
+- fix deps (dbus-glib-devel, dbus-devel)
+- fix deps (openssl-devel)
+- 2.2.0
+- remove obsolete patch (nut-2.0.1-lib64.patch)
+- rediffed patches (nut-upsset.conf.diff and nut-mdv_conf.diff)
+- cleanup the spec file a bit for new autofoo
+
+
+* Fri Mar 09 2007 Oden Eriksson <oeriksson@mandriva.com> 2.0.5-3mdv2007.1
++ Revision: 138754
+- use -fstack-protector-all on later gcc only
+
+* Thu Mar 08 2007 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.5-2mdv2007.1
++ Revision: 137655
+- pass -fstack-protector-all to the CFLAGS
+
+* Thu Feb 08 2007 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.5-1mdv2007.1
++ Revision: 118111
+- 2.0.5
+- drop the bouissou2 patch, too difficult to apply
+- added the html files
+
+* Thu Nov 30 2006 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.4-3mdv2007.1
++ Revision: 89344
+- set correct owner of the /var/run/upsmon.pid file
+- add some working but commented defaults for upsmon and upssched
+
+* Wed Nov 29 2006 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.4-2mdv2007.1
++ Revision: 88572
+- added P1 to make upsset.cgi work
+- add the uucp group membership (for /dev/ttyS0)
+- fix apache config
+
+* Tue Nov 28 2006 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.4-1mdv2007.1
++ Revision: 88044
+- Import nut
+
+* Tue Nov 28 2006 Oden Eriksson <oeriksson@mandriva.com> 1:2.0.4-1mdv2007.1
+- 2.0.4
+- rediffed party upstread (in 2.0.2) patch (P0)
+- added the udev rules file (thanks blino)
+
+* Wed Aug 30 2006 Lenny Cartier <lenny@mandriva.com> 1:2.0.1-6mdv2007.0
+- mkrel
+
+* Wed Jan 04 2006 Oden Eriksson <oeriksson@mandriva.com> 2.0.1-5mdk
+- rebuilt against new net-snmp with new major (10)
+
+* Wed Dec 21 2005 Oden Eriksson <oeriksson@mandriva.com> 2.0.1-4mdk
+- rebuilt against net-snmp that has new major (9)
+
+* Sun Nov 13 2005 Oden Eriksson <oeriksson@mandriva.com> 2.0.1-3mdk
+- rebuilt against openssl-0.9.8a
+
+* Tue Mar 22 2005 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 2.0.1-2mdk
+- lib64 fixes (again)
+
+* Mon Feb 28 2005 Arnaud de Lorbeau <adelorbeau@mandrakesoft.com> 1:2.0.1-1mdk
+- 2.0.1
+- adapt patchs from Michel Bouissou
+
+* Thu Feb 10 2005 Arnaud de Lorbeau <adelorbeau@mandrakesoft.com> 1:2.0.0-4mdk
+- upsd poweroff script clean: remove the sleep and let the halt script continue
+- add upsd service status option
+- add Michel Bouissou's patch
+
+* Sat Oct 23 2004 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 2.0.0-3mdk
+- lib64 fixes
+
+* Wed Oct 06 2004 Thierry Vignaud <tvignaud@mandrakesoft.com> 2.0.0-2mdk
+- workaround buggy parrallel build
+- package again driver list
+- patch 2: fix compiling
+
+* Fri Mar 26 2004 Arnaud de Lorbeau <adelorbeau@mandrakesoft.com> 2.0.0-1mdk
+- 2.0.0
+
+* Wed Mar 24 2004 Arnaud de Lorbeau <adelorbeau@mandrakesoft.com> 1.4.2-1mdk
+- 1.4.2 final (with no changements from previous pre2 release)
+
+* Tue Mar 16 2004 Arnaud de Lorbeau <adelorbeau@mandrakesoft.com> 1.4.2-0.pre2.1mdk
+- New release with security and kernel 2.6 fixs
+- Change URL
+
