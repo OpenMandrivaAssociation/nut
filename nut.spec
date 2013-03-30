@@ -31,7 +31,7 @@ BuildRequires:	autoconf automake libtool
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	genders-devel
 BuildRequires:	libgd-devel >= 2.0.5
-BuildRequires:	libjpeg-devel
+BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
