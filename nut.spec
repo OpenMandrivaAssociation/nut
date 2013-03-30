@@ -277,16 +277,6 @@ if [ ! -f %_sbindir/upsmon ]; then
    %_postun_userdel %{nutuser}
 fi
 
-%post cgi
-%if %mdkversion < 201010
-%_post_webapp
-%endif
-
-%postun cgi
-%if %mdkversion < 201010
-%_postun_webapp
-%endif
-
 %files
 %doc AUTHORS COPYING ChangeLog MAINTAINERS NEWS README UPGRADING docs
 /lib/systemd/system-shutdown/nutshutdown
