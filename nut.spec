@@ -11,7 +11,7 @@ Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Epoch:		1
 Version:	2.6.4
-Release:	3
+Release:	6
 License:	GPLv2
 Group:		System/Configuration/Hardware
 Url:		http://www.networkupstools.org/
@@ -168,7 +168,7 @@ cat > %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf << EOF
 
 <Files upsset.cgi>
     Require all denied
-    Require host 127.0.0.1
+    Require host localhost.localdomain
     ErrorDocument 403 "Access denied per %{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf"
 </Files>
 
@@ -176,7 +176,7 @@ Alias /nut /var/www/nut
 
 <Directory "/var/www/nut">
     Require all denied
-    Require host 127.0.0.1
+    Require host localhost.localdomain
     ErrorDocument 403 "Access denied per %{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf"
 </Directory>
 
