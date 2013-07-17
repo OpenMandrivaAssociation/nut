@@ -167,18 +167,16 @@ install -d %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d
 cat > %{buildroot}%{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf << EOF
 
 <Files upsset.cgi>
-    Order deny,allow
-    Deny from all
-    Allow from 127.0.0.1
+    Require all denied
+    Require host 127.0.0.1
     ErrorDocument 403 "Access denied per %{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf"
 </Files>
 
 Alias /nut /var/www/nut
 
 <Directory "/var/www/nut">
-    Order deny,allow
-    Deny from all
-    Allow from 127.0.0.1
+    Require all denied
+    Require host 127.0.0.1
     ErrorDocument 403 "Access denied per %{_sysconfdir}/httpd/conf/webapps.d/%{name}-cgi.conf"
 </Directory>
 
