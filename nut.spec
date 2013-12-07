@@ -11,7 +11,7 @@ Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Epoch:		1
 Version:	2.6.4
-Release:	11
+Release:	12
 License:	GPLv2
 Group:		System/Configuration/Hardware
 Url:		http://www.networkupstools.org/
