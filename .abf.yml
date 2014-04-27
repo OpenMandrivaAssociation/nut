@@ -1,2 +1,4 @@
+removed_sources:
+  nut-2.6.4.tar.gz: 55b7c5eafe60de64107374c90ee2079aa3350a94
 sources:
-  "nut-2.6.4.tar.gz": 55b7c5eafe60de64107374c90ee2079aa3350a94
+  nut-2.7.2.tar.gz: 646da698a56ee62ebe030e12bc78e5855bfe180f

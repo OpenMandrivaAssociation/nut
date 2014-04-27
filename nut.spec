@@ -3,20 +3,22 @@
 %{?_with_doc:	%global build_doc 1}
 
 %define nutuser	ups
-%define	major	1
-%define libname	%mklibname nutscan %{major}
-%define libups	%mklibname upsclient %{major}
+%define	scanmajor	1
+%define upsmajor	4
+%define clientmajor	0
+%define libname	%mklibname nutscan %{scanmajor}
+%define libups	%mklibname upsclient %{upsmajor}
+%define libclient %mklibname nutclient %{clientmajor}
 
 Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Epoch:		1
-Version:	2.6.4
-Release:	14
+Version:	2.7.2
+Release:	1
 License:	GPLv2
 Group:		System/Configuration/Hardware
 Url:		http://www.networkupstools.org/
-Source0:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz
-Source1:	http://www.networkupstools.org/source/2.6/%{name}-%{version}.tar.gz.sig
+Source0:	http://www.networkupstools.org/source/2.7/%{name}-%{version}.tar.gz
 Patch0:	nut-upsset.conf.diff
 Patch1:	nut-mdv_conf.diff
 %if %{build_doc}
@@ -70,6 +72,14 @@ Group:		System/Libraries
 %description -n	%{libups}
 This package contains a shared libraries for NUT client applications.
 
+%package -n     %{libclient}
+Summary:        Network UPS Tools Client Utilities library
+Group:          System/Libraries
+
+%description -n %{libclient}
+This package contains a shared libraries for NUT client applications.
+
+
 %package	server
 Summary:	Network UPS Tools server
 Group:		System/Servers
@@ -97,6 +107,7 @@ Summary:	Development for NUT Client
 Group:		Development/C
 Requires:	%{libname} >= %{EVRD}
 Requires:	%{libups} >= %{EVRD}
+Requires:	%{libclient} >= %{EVRD}
 
 %description	devel
 This package contains the development header files and libraries
@@ -134,6 +145,7 @@ sed -i -e "s|/cgi-bin/nut|/cgi-bin|g" data/html/*.html*
 	--with-port=3493 \
 	--with-user=%{nutuser} \
 	--with-group=%{nutuser} \
+	--with-systemdsystemunitdir=%{_unitdir} \
 	--with-pkgconfig-dir=%{_libdir}/pkgconfig \
 	--with-hotplug-dir=%{_sysconfdir}/hotplug \
 	--with-udev-dir=%{_sysconfdir}/udev
@@ -181,6 +193,12 @@ Alias /nut /var/www/nut
 </Directory>
 
 EOF
+
+# fix systemd location
+mkdir -p %{buildroot}%{_unitdir}
+mv %{buildroot}%{_libdir}/systemd/system/* %{buildroot}%{_unitdir}
+mkdir -p %{buildroot}/lib/systemd/system-shutdown
+mv %{buildroot}%{_libdir}/systemd/system-shutdown/* %{buildroot}/lib/systemd/system-shutdown
 
 # install missing (forgotten?) headers
 install -m0644 tools/nut-scanner/*.h %{buildroot}%{_includedir}/
@@ -254,10 +272,13 @@ fi
 %{_mandir}/man8/upssched.8*
 
 %files -n %{libname}
-%{_libdir}/libnutscan.so.%{major}*
+%{_libdir}/libnutscan.so.%{scanmajor}*
 
 %files -n %{libups}
-%{_libdir}/libupsclient.so.%{major}*
+%{_libdir}/libupsclient.so.%{upsmajor}*
+
+%files -n %{libclient}
+%{_libdir}/libnutclient.so.%{clientmajor}*
 
 %files server
 /lib/systemd/system/nut-server.service
@@ -268,6 +289,13 @@ fi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/udev/rules.d/70-nut-usbups.rules
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhid.usermap
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/hotplug/usb/libhidups
+/sbin/al175
+/sbin/apcupsd-ups
+/sbin/nutdrv_atcl_usb
+/sbin/nutdrv_qx
+/sbin/oldmge-shut
+/sbin/riello_ser
+/sbin/riello_usb
 /sbin/apcsmart
 /sbin/apcsmart-old
 /sbin/bcmxcp
@@ -296,7 +324,6 @@ fi
 /sbin/mge-shut
 /sbin/mge-utalk
 /sbin/microdowell
-/sbin/newmge-shut
 /sbin/oneac
 /sbin/optiups
 /sbin/powercom
@@ -312,7 +339,7 @@ fi
 /sbin/tripplitesu
 /sbin/tripplite_usb
 /sbin/upscode2
-/sbin/upsdrvctl
+%{_sbindir}/upsdrvctl
 /sbin/usbhid-ups
 /sbin/victronups
 /sbin/netxml-ups
@@ -332,7 +359,6 @@ fi
 %{_mandir}/man8/bestfortress.8*
 %{_mandir}/man8/bestuferrups.8*
 %{_mandir}/man8/bestups.8*
-%{_mandir}/man8/blazer.8*
 %{_mandir}/man8/clone.8*
 %{_mandir}/man8/dummy-ups.8*
 %{_mandir}/man8/etapro.8*
@@ -368,6 +394,14 @@ fi
 %{_mandir}/man8/usbhid-ups.8*
 %{_mandir}/man8/victronups.8*
 %{_mandir}/man8/netxml-ups.8*
+%{_mandir}/man8/al175.8*
+%{_mandir}/man8/apcupsd-ups.8*
+%{_mandir}/man8/blazer_ser.8*
+%{_mandir}/man8/blazer_usb.8*
+%{_mandir}/man8/nutdrv_atcl_usb.8*
+%{_mandir}/man8/nutdrv_qx.8*
+%{_mandir}/man8/riello_ser.8*
+%{_mandir}/man8/riello_usb.8*
 
 %files cgi
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ups/hosts.conf
@@ -411,4 +445,40 @@ fi
 %{_mandir}/man3/nutscan_scan_xml_http.3*
 %{_mandir}/man3/nutscan.3*
 %{_mandir}/man3/nutscan_init.3*
+%{_mandir}/man3/libnutclient.3.*
+%{_mandir}/man3/libnutclient_commands.3.*
+%{_mandir}/man3/libnutclient_devices.3.*
+%{_mandir}/man3/libnutclient_general.3.*
+%{_mandir}/man3/libnutclient_misc.3.*
+%{_mandir}/man3/libnutclient_tcp.3.*
+%{_mandir}/man3/libnutclient_variables.3.*
+%{_mandir}/man3/nutclient_authenticate.3.*
+%{_mandir}/man3/nutclient_destroy.3.*
+%{_mandir}/man3/nutclient_device_forced_shutdown.3.*
+%{_mandir}/man3/nutclient_device_login.3.*
+%{_mandir}/man3/nutclient_device_master.3.*
+%{_mandir}/man3/nutclient_execute_device_command.3.*
+%{_mandir}/man3/nutclient_get_device_command_description.3.*
+%{_mandir}/man3/nutclient_get_device_commands.3.*
+%{_mandir}/man3/nutclient_get_device_description.3.*
+%{_mandir}/man3/nutclient_get_device_num_logins.3.*
+%{_mandir}/man3/nutclient_get_device_rw_variables.3.*
+%{_mandir}/man3/nutclient_get_device_variable_description.3.*
+%{_mandir}/man3/nutclient_get_device_variable_values.3.*
+%{_mandir}/man3/nutclient_get_device_variables.3.*
+%{_mandir}/man3/nutclient_get_devices.3.*
+%{_mandir}/man3/nutclient_has_device.3.*
+%{_mandir}/man3/nutclient_has_device_command.3.*
+%{_mandir}/man3/nutclient_has_device_variable.3.*
+%{_mandir}/man3/nutclient_logout.3.*
+%{_mandir}/man3/nutclient_set_device_variable_value.3.*
+%{_mandir}/man3/nutclient_set_device_variable_values.3.*
+%{_mandir}/man3/nutclient_tcp_create_client.3.*
+%{_mandir}/man3/nutclient_tcp_disconnect.3.*
+%{_mandir}/man3/nutclient_tcp_get_timeout.3.*
+%{_mandir}/man3/nutclient_tcp_is_connected.3.*
+%{_mandir}/man3/nutclient_tcp_reconnect.3.*
+%{_mandir}/man3/nutclient_tcp_set_timeout.3.*
+%{_mandir}/man3/nutscan_get_serial_ports_list.3.*
+%{_mandir}/man3/nutscan_scan_eaton_serial.3.*
 
