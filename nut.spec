@@ -14,7 +14,7 @@ Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Epoch:		1
 Version:	2.7.2
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		System/Configuration/Hardware
 Url:		http://www.networkupstools.org/
@@ -215,10 +215,10 @@ rm -f %{buildroot}%{_mandir}/man8/nut-recorder.8*
 
 %preun
 # only do this if it is not an upgrade
-%_preun_service upsmon
+%_preun_service nut-monitor
 
 %post
-%_post_service upsmon
+%_post_service nut-monitor
 
 %postun
 # Only do this if it is not an upgrade
@@ -232,10 +232,10 @@ fi
 %{_sbindir}/usermod -G dialout,tty,usb %{nutuser}
 
 %preun	server
-%_preun_service upsd || :
+%_preun_service nut-server || :
 
 %post	server
-%_post_service upsd || :
+%_post_service nut-server || :
 
 %postun	server
 # Only do this if it is not an upgrade
