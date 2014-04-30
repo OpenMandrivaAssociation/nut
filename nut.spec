@@ -14,7 +14,7 @@ Summary:	Network UPS Tools Client Utilities
 Name:		nut
 Epoch:		1
 Version:	2.7.2
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		System/Configuration/Hardware
 Url:		http://www.networkupstools.org/
@@ -166,8 +166,7 @@ do
     mv $file %{buildroot}%{_sysconfdir}/ups/`basename $file .sample`
 done
 
-mv %{buildroot}%{_sysconfdir}/ups/upsmon.conf %{buildroot}%{_sysconfdir}/ups/upsmon.conf.sample
-perl -pi -e 's/# RUN_AS_USER nutmon/RUN_AS_USER %{nutuser}/g' %{buildroot}%{_sysconfdir}/ups/upsmon.conf.sample
+perl -pi -e 's/# RUN_AS_USER nutmon/RUN_AS_USER %{nutuser}/g' %{buildroot}%{_sysconfdir}/ups/upsmon.conf
 
 cp -af data/driver.list docs/
 
@@ -250,7 +249,7 @@ fi
 /lib/systemd/system/nut-monitor.service
 %attr(0755,root,root) %dir %{_sysconfdir}/ups
 %attr(0640,root,%{nutuser}) %config(noreplace) %{_sysconfdir}/ups/upssched.conf
-%attr(0640,root,%{nutuser}) %{_sysconfdir}/ups/upsmon.conf.sample
+%attr(0640,root,%{nutuser}) %{_sysconfdir}/ups/upsmon.conf
 %attr(0750,%{nutuser},%{nutuser}) %dir /var/state/ups
 %attr(0755,%{nutuser},%{nutuser}) %dir /var/run/nut
 %{_bindir}/nut-scanner
