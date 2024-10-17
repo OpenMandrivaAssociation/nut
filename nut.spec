@@ -17,7 +17,7 @@ Version:	2.7.2
 Release:	8
 License:	GPLv2
 Group:		System/Configuration/Hardware
-Url:		http://www.networkupstools.org/
+Url:		https://www.networkupstools.org/
 Source0:	http://www.networkupstools.org/source/2.7/%{name}-%{version}.tar.gz
 Patch0:	nut-upsset.conf.diff
 Patch1:	nut-mdv_conf.diff
