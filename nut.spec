@@ -22,6 +22,11 @@ Source0:	http://www.networkupstools.org/source/2.7/%{name}-%{version}.tar.gz
 Patch0:	nut-upsset.conf.diff
 Patch1:	nut-mdv_conf.diff
 %if %{build_doc}
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	dblatex
 BuildRequires:	asciidoc >= 8.6.3
 %endif
